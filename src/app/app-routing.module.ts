@@ -1,12 +1,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginContainerComponent } from './containers/login';
+import { environment } from 'src/environments/environment';
 
-const routes: Routes = [{ path: 'login', component: LoginContainerComponent }];
+import { LoginContainerComponent } from './containers/login';
+import { MainContainerComponent } from './containers/main';
+import { AuthGuard } from './services/auth-guard.service';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: MainContainerComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'login', component: LoginContainerComponent },
+  { path: '**', redirectTo: '' },
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, { enableTracing: !environment.production }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
