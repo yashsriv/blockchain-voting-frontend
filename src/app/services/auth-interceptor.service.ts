@@ -24,7 +24,7 @@ export class AuthInterceptorService implements HttpInterceptor {
       // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
       return of(err.message);
     }
-    return Observable.throw(err);
+    throw err;
   }
 
   intercept(

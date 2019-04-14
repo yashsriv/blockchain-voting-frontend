@@ -12,7 +12,8 @@
         </mat-form-field>
 
         <div fxLayout="row" fxLayoutAlign="center center" class="button-container">
-          <button type="submit" [disabled]="!loginForm.valid || loading" mat-stroked-button>Login</button>
+          <button *ngIf="!loading" type="submit" [disabled]="!loginForm.valid" mat-stroked-button>Login</button>
+          <mat-spinner [diameter]="50" *ngIf="loading"></mat-spinner>
         </div>
 
         <div class="error mat-small" *ngIf="!loading && errored">
