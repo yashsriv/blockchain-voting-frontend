@@ -12,6 +12,7 @@ interface LoginCred {
 }
 
 interface LoginResponse {
+  token: string;
   username: string;
 }
 
@@ -22,16 +23,22 @@ interface SearchResponse {
 
 @Injectable()
 export class AuthService {
+  public token = null;
+  private password = null;
   private userInfo = null;
 
   constructor(private http: HttpClient) {}
 
   get loggedIn(): boolean {
-    return this.userInfo != null;
+    return this.token != null;
   }
 
   login(loginCred: LoginCred): Observable<User> {
     return this.http.post<LoginResponse>('/api/login', loginCred).pipe(
+      tap(res => {
+        this.token = res.token;
+        this.password = loginCred.password;
+      }),
       switchMap(res =>
         this.http
           .get<SearchResponse>('https://search.pclub.in/api/student', {
@@ -57,6 +64,7 @@ export class AuthService {
 
   logout() {
     this.userInfo = null;
-    return of();
+    this.token = null;
+    this.password = null;
   }
 }
