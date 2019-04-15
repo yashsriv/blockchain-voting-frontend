@@ -1,2 +1,9 @@
-<h1> Hello There!! </h1>
-Nice to meet you {{ username$ | async }}
+<div *ngIf="loading; else main"
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  class="container">
+  <mat-spinner [diameter]="50"></mat-spinner>
+</div>
+<ng-template #main>
+  {{ platformInfo | json }}
+</ng-template>

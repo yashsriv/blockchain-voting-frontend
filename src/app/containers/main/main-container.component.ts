@@ -1,24 +1,28 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-interface pongResponse {
-  pong: string;
-}
+import { UserService } from 'src/app/services/user.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { PlatformInfo } from 'src/app/models/platform';
 
 @Component({
   templateUrl: './main-container.component.html',
   styleUrls: ['./main-container.component.scss'],
 })
 export class MainContainerComponent {
-  public username$: Observable<string>;
+  loading = true;
+  platformInfo: PlatformInfo;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private platform: PlatformService,
+    public user: UserService
+  ) {}
 
   ngOnInit() {
-    this.username$ = this.http
-      .get<pongResponse>('/api/ping')
-      .pipe(map(res => res.pong));
+    this.platform.fetchPlatformInfo().subscribe(info => {
+      this.platformInfo = info;
+      this.loading = false;
+    });
   }
 }
