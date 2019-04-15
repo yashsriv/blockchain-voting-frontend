@@ -22,11 +22,6 @@ interface LoginResponse {
   isRegistered: boolean;
 }
 
-interface SearchResponse {
-  n: string;
-  i: string;
-}
-
 @Injectable()
 export class AuthService {
   public token = null;
@@ -37,7 +32,7 @@ export class AuthService {
     return this.token != null;
   }
 
-  login(loginCred: LoginCred): Observable<User> {
+  login(loginCred: LoginCred) {
     return this.http.post<LoginResponse>('/api/login', loginCred).pipe(
       tap(res => {
         this.token = res.token;
@@ -55,27 +50,12 @@ export class AuthService {
               map(_ => res)
             )
       ),
-      switchMap(res =>
-        this.http
-          .get<SearchResponse>('https://search.pclub.in/api/student', {
-            params: {
-              username: res.username,
-            },
-          })
-          .pipe(
-            map(v => {
-              return {
-                username: res.username,
-                name: v.n,
-                roll: v.i,
-                isAdmin: res.isAdmin,
-                isCandidate: res.isCandidate,
-              };
-            })
-          )
-      ),
-      tap(user => {
-        this.user.userInfo = user;
+      tap(res => {
+        this.user.userInfo = {
+          username: res.username,
+          isAdmin: res.isAdmin,
+          isCandidate: res.isCandidate,
+        };
       })
     );
   }

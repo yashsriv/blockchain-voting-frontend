@@ -4,6 +4,55 @@
   class="container">
   <mat-spinner [diameter]="50"></mat-spinner>
 </div>
+
 <ng-template #main>
-  {{ platformInfo | json }}
+  <div class="container"
+    fxLayout="row" fxLayoutAlign="center center">
+    <div *ngIf="platformInfo.adminKey == null; else active">
+      Platform is currently inactive. Please try again later.
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #active>
+  <div *ngIf="platformInfo.votingStarted; else preVoting">
+    <div *ngIf="!platformInfo.votingEnded; else postVoting">
+      <app-voting
+        [adminKey]="platformInfo.adminKey"
+        [isAdmin]="user.userInfo.isAdmin"
+        [candidates]="platformInfo.candidates"
+        [candidateKeys]="platformInfo.candidateKeys">
+      </app-voting>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #preVoting>
+  <div *ngIf="user.userInfo.isAdmin; else noAdminPreVoting">
+    <app-admin-pre-voting
+      (votingStarted)="votingStarted()"
+      [candidates]="platformInfo.candidates"
+      [candidateKeys]="platformInfo.candidateKeys">
+    </app-admin-pre-voting>
+  </div>
+</ng-template>
+
+<ng-template #noAdminPreVoting>
+  Voting has not started yet.
+</ng-template>
+
+<ng-template #postVoting>
+  <div *ngIf="user.userInfo.isAdmin && !platformInfo.resultsPublished; else noAdminPostVoting">
+    Please publish results using this interface
+  </div>
+</ng-template>
+
+<ng-template #noAdminPostVoting>
+  <div *ngIf="!platformInfo.resultsPublished; else results">
+    Voting is over!! Results have still not been published.
+  </div>
+</ng-template>
+
+<ng-template #results>
+  See these are the results
 </ng-template>

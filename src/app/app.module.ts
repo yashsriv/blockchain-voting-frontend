@@ -13,12 +13,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { components } from './components';
 import { containers } from './containers';
 import { services } from './services';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 @NgModule({
-  declarations: [AppComponent, ...containers],
+  declarations: [AppComponent, ...components, ...containers],
   imports: [
     // Core Angular Stuff
     BrowserModule,

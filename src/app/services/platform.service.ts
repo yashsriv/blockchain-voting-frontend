@@ -58,16 +58,19 @@ export class PlatformService {
   private async mapResponseToInfo(
     res: PlatformInfoResponse
   ): Promise<PlatformInfo> {
-    const adminKey = await getPublicKey(res.adminKey);
+    const adminKey =
+      res.adminKey === '' ? null : await getPublicKey(res.adminKey);
     const candidatePublicKeys = await Promise.all(
-      Object.keys(res.candidateKeys).map(k =>
-        getPublicKey(res.candidateKeys[k])
-      )
+      Object.keys(res.candidateKeys)
+        .filter(k => res.candidateKeys[k] !== '')
+        .map(k => getPublicKey(res.candidateKeys[k]))
     );
-    const candidateKeys = Object.keys(res.candidateKeys).reduce(
-      (acc, cur, idx) => ({ ...acc, [cur]: candidatePublicKeys[idx] }),
-      {}
-    );
+    const candidateKeys = Object.keys(res.candidateKeys)
+      .filter(k => res.candidateKeys[k] !== '')
+      .reduce(
+        (acc, cur, idx) => ({ ...acc, [cur]: candidatePublicKeys[idx] }),
+        {}
+      );
     const { candidates, votingStarted, votingEnded, resultsPublished } = res;
     return {
       adminKey,

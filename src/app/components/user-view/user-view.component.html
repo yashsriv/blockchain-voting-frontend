@@ -1,0 +1,15 @@
+<div class="container" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+  <div *ngIf="loading; else body">
+    <mat-spinner [diameter]="140"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #body>
+  <img class="img" [src]="oaimage">
+  <div class="name">
+    {{ user.name }}
+  </div>
+  <div *ngIf="showRegistered" [class.warning]="!registered">
+    {{ registered ? 'Registered' : 'Not Registered' }}
+  </div>
+</ng-template>
