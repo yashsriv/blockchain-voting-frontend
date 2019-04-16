@@ -44,7 +44,7 @@
 
 <ng-template #postVoting>
   <div *ngIf="user.userInfo.isAdmin && !platformInfo.resultsPublished; else noAdminPostVoting">
-    Please publish results using this interface
+    <app-publish-result [candidates]="platformInfo.candidates"></app-publish-result>
   </div>
 </ng-template>
 
@@ -57,3 +57,7 @@
 <ng-template #results>
   See these are the results
 </ng-template>
+
+<div class="contract">
+  <a [href]="'https://ropsten.etherscan.io/address/' + platformInfo?.address" target="_blank"> View Contract </a>
+</div>

@@ -89,7 +89,7 @@ export async function generateKeyPair(
   password: string,
   isAdmin: boolean
 ): Promise<{ public: string; private: string }> {
-  let modulusLength = isAdmin ? 4624 : 4096;
+  let modulusLength = isAdmin ? 8192 : 4096;
   let keyPair = await crypto.subtle.generateKey(
     {
       name: 'RSA-OAEP',

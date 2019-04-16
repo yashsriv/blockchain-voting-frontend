@@ -80,6 +80,7 @@ export class VotingComponent {
       cEncrypted
     );
 
+    console.log(passphrase);
     const ctArray = Array.from(new Uint8Array(aEncrypted)); // ciphertext as byte array
     const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join(''); // ciphertext as string
     const ctBase64 = btoa(ctStr); // encode ciphertext as base64

@@ -1,41 +1,52 @@
-<ng-container *ngIf="votes.length !== 0">
-  <mat-list>
-    <mat-list-item *ngFor="let vote of votes">
-      {{ vote | hash | async }}
-      <button mat-icon-button (click)="verify(vote)">
-        Verify <mat-icon>check_circle</mat-icon>
+<div fxLayout="column" fxLayoutGap="50px">
+  <ng-container *ngIf="votes.length !== 0">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            All Votes
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <mat-list-item *ngFor="let vote of votes | keyvalue">
+            <pre>{{ vote.key | hash | async }}</pre>
+            <a mat-button [href]="'https://ropsten.etherscan.io/tx/' + vote.value" target="_blank">
+              Verify <mat-icon>check_circle</mat-icon>
+            </a>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+
+  <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+    <div fxLayout="column" fxLayoutAlign="center center" *ngFor="let item of voteMap | keyvalue">
+      <app-user-view [username]="item.key"></app-user-view>
+      <button mat-button (click)="listVotes(item.value)">
+        {{ item.value.length }} vote{{ item.value.length !== 1 ? 's' : '' }}
       </button>
-    </mat-list-item>
-  </mat-list>
-</ng-container>
+    </div>
+  </div>
 
-<div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
-  <div fxLayout="column" fxLayoutAlign="center center" *ngFor="let item of voteMap">
-    <app-user-view [username]="item.key"></app-user-view>
-    <button mat-button (click)="listVotes(item.value)">
-      See votes
-    </button>
-  </div>
-</div>
-
-<div [ngSwitch]="step">
-  <div *ngSwitchCase="'get-votes'">
-    <button mat-raised-button color="primary" (click)="getVotes()">
-      Get Votes
-    </button>
-  </div>
-  <div *ngSwitchCase="'get-vote-count'" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
-    <app-user-view *ngFor="let candidate of candidates"
-      [username]="candidate"
-      [showCheckVotes]="true" (voted)="checkVotes(candidate)">
-    </app-user-view>
-  </div>
-  <div *ngSwitchCase="'publish-results'">
-    <button mat-raised-button color="primary" (click)="publish()">
-      Publish Results
-    </button>
-  </div>
-  <div *ngSwitchCase="'loading'">
-    <mat-spinner [diameter]="50"></mat-spinner>
+  <div [ngSwitch]="step">
+    <div *ngSwitchCase="'get-votes'">
+      <button mat-raised-button color="primary" (click)="getVotes()">
+        Get Votes
+      </button>
+    </div>
+    <div *ngSwitchCase="'get-vote-count'" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+      <app-user-view *ngFor="let candidate of candidates"
+        [username]="candidate"
+        [showCheckVotes]="true" (voted)="checkVotes(candidate)">
+      </app-user-view>
+    </div>
+    <div *ngSwitchCase="'publish-results'" fxLayoutAlign="center center">
+      <button mat-raised-button color="primary" (click)="publish()">
+        Publish Results
+      </button>
+    </div>
+    <div *ngSwitchCase="'loading'">
+      <mat-spinner [diameter]="50"></mat-spinner>
+    </div>
   </div>
 </div>
