@@ -41,7 +41,7 @@ export class AuthService {
       switchMap(res =>
         res.isRegistered
           ? of(res)
-          : from(generateKeyPair(loginCred.password)).pipe(
+          : from(generateKeyPair(loginCred.password, res.isAdmin)).pipe(
               switchMap(data =>
                 this.http
                   .post<TransactionProof>('/api/register', data)

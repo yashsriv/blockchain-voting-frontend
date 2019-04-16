@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { map, tap } from 'rxjs/operators';
@@ -16,7 +16,11 @@ interface SearchResponse {
 export class UserViewComponent implements OnInit {
   @Input() username: string;
   @Input() showRegistered: boolean;
+  @Input() showVote: boolean;
+  @Input() showCheckVotes: boolean;
   @Input() registered: boolean;
+  @Input() disabled: boolean;
+  @Output() voted = new EventEmitter();
 
   loading = true;
   user: any;
@@ -31,13 +35,11 @@ export class UserViewComponent implements OnInit {
         },
       })
       .pipe(
-        map(v => {
-          return {
-            username: this.username,
-            name: v.n,
-            roll: v.i,
-          };
-        }),
+        map(v => ({
+          username: this.username,
+          name: v.n,
+          roll: v.i,
+        })),
         tap(v => {
           this.user = v;
           this.loading = false;
@@ -54,5 +56,9 @@ export class UserViewComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(
       `https://oa.cc.iitk.ac.in/Oa/Jsp/Photo/${this.user.roll}_0.jpg`
     );
+  }
+
+  vote() {
+    this.voted.emit();
   }
 }

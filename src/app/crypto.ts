@@ -51,7 +51,10 @@ async function aesGcmEncrypt(
  *   const plaintext = await aesGcmDecrypt(ciphertext, 'pw');
  *   aesGcmDecrypt(ciphertext, 'pw').then(function(plaintext) { console.log(plaintext); });
  */
-async function aesGcmDecrypt(ciphertext: string, password: string) {
+async function aesGcmDecrypt(
+  ciphertext: string,
+  password: string
+): Promise<string> {
   const pwUtf8 = new TextEncoder().encode(password); // encode password as UTF-8
   const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8); // hash the password
 
@@ -83,12 +86,14 @@ async function aesGcmDecrypt(ciphertext: string, password: string) {
  *
  */
 export async function generateKeyPair(
-  password: string
+  password: string,
+  isAdmin: boolean
 ): Promise<{ public: string; private: string }> {
+  let modulusLength = isAdmin ? 4624 : 4096;
   let keyPair = await crypto.subtle.generateKey(
     {
       name: 'RSA-OAEP',
-      modulusLength: 4096,
+      modulusLength: modulusLength,
       publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
       hash: 'SHA-256',
     },

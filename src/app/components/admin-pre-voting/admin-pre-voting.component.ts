@@ -16,6 +16,7 @@ export class AdminPreVotingComponent {
   constructor(private platform: PlatformService) {}
 
   startVoting() {
+    this.loading = true;
     this.platform.startVoting().subscribe(_ => {
       this.loading = false;
       this.votingStarted.emit();

@@ -1,0 +1,41 @@
+<ng-container *ngIf="votes.length !== 0">
+  <mat-list>
+    <mat-list-item *ngFor="let vote of votes">
+      {{ vote | hash | async }}
+      <button mat-icon-button (click)="verify(vote)">
+        Verify <mat-icon>check_circle</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</ng-container>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+  <div fxLayout="column" fxLayoutAlign="center center" *ngFor="let item of voteMap">
+    <app-user-view [username]="item.key"></app-user-view>
+    <button mat-button (click)="listVotes(item.value)">
+      See votes
+    </button>
+  </div>
+</div>
+
+<div [ngSwitch]="step">
+  <div *ngSwitchCase="'get-votes'">
+    <button mat-raised-button color="primary" (click)="getVotes()">
+      Get Votes
+    </button>
+  </div>
+  <div *ngSwitchCase="'get-vote-count'" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+    <app-user-view *ngFor="let candidate of candidates"
+      [username]="candidate"
+      [showCheckVotes]="true" (voted)="checkVotes(candidate)">
+    </app-user-view>
+  </div>
+  <div *ngSwitchCase="'publish-results'">
+    <button mat-raised-button color="primary" (click)="publish()">
+      Publish Results
+    </button>
+  </div>
+  <div *ngSwitchCase="'loading'">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+</div>

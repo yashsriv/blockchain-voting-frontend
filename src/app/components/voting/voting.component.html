@@ -1,0 +1,31 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px">
+  <div *ngIf="!voted; else votedView"
+    fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+    <app-user-view *ngFor="let candidate of candidates"
+      [showVote]="true"
+      [username]="candidate" [disabled]="loading" (voted)="vote(candidate)">
+    </app-user-view>
+  </div>
+  <button *ngIf="isAdmin" mat-raised-button color="primary" (click)="endVoting()" [disabled]="loading">
+    End Voting Phase <mat-spinner *ngIf="loading" [diameter]="50"></mat-spinner>
+  </button>
+</div>
+
+<ng-template #votedView>
+  <div *ngIf="alreadyVoted; else newVote">
+    You have already voted!!
+  </div>
+</ng-template>
+
+<ng-template #newVote>
+  <div>
+    Unique Vote Identifier: <pre>{{ votePassphrase }}</pre>
+  </div>
+  <div>
+    Unique Vote Hash: <pre>{{ voteStr | hash | async }}</pre>
+  </div>
+  <div>
+    Please keep above two values carefully as they are unique identifiers
+    for you to check if your votes were not modified at any point of time.
+  </div>
+</ng-template>

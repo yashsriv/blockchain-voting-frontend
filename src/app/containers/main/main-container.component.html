@@ -18,6 +18,7 @@
   <div *ngIf="platformInfo.votingStarted; else preVoting">
     <div *ngIf="!platformInfo.votingEnded; else postVoting">
       <app-voting
+        (votingEnded)="votingEnded()"
         [adminKey]="platformInfo.adminKey"
         [isAdmin]="user.userInfo.isAdmin"
         [candidates]="platformInfo.candidates"

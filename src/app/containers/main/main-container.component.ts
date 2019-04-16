@@ -24,4 +24,8 @@ export class MainContainerComponent {
   votingStarted() {
     this.platformInfo.votingStarted = true;
   }
+
+  votingEnded() {
+    this.platformInfo.votingEnded = true;
+  }
 }

@@ -12,4 +12,10 @@
   <div *ngIf="showRegistered" [class.warning]="!registered">
     {{ registered ? 'Registered' : 'Not Registered' }}
   </div>
+  <button mat-button *ngIf="showVote" [disabled]="disabled" (click)="vote()">
+    Vote
+  </button>
+  <button mat-button *ngIf="showCheckVotes" [disabled]="disabled" (click)="vote()">
+    Check Votes
+  </button>
 </ng-template>
