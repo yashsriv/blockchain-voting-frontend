@@ -28,4 +28,8 @@ export class MainContainerComponent {
   votingEnded() {
     this.platformInfo.votingEnded = true;
   }
+
+  published(txhash: string) {
+    this.platformInfo.resultsPublished = txhash;
+  }
 }

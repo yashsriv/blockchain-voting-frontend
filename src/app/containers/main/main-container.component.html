@@ -43,19 +43,20 @@
 </ng-template>
 
 <ng-template #postVoting>
-  <div *ngIf="user.userInfo.isAdmin && !platformInfo.resultsPublished; else noAdminPostVoting">
-    <app-publish-result [candidates]="platformInfo.candidates"></app-publish-result>
+  <div *ngIf="user.userInfo.isAdmin && platformInfo.resultsPublished === ''; else noAdminPostVoting">
+    <app-publish-result [candidates]="platformInfo.candidates" (published)="published($event)"></app-publish-result>
   </div>
 </ng-template>
 
 <ng-template #noAdminPostVoting>
-  <div *ngIf="!platformInfo.resultsPublished; else results">
+  <div *ngIf="platformInfo.resultsPublished === ''; else results">
     Voting is over!! Results have still not been published.
   </div>
 </ng-template>
 
 <ng-template #results>
-  See these are the results
+  The results can be seen at
+  <a [href]="'https://ropsten.etherscan.io/tx/' + platformInfo.resultsPublished" target="_blank">this transaction</a>.
 </ng-template>
 
 <div class="contract">

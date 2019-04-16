@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { switchMap, tap } from 'rxjs/operators';
@@ -47,6 +47,7 @@ export class PasswordDialogComponent {
 })
 export class PublishResultComponent {
   @Input() candidates: string[];
+  @Output() published = new EventEmitter<string>();
 
   public step = 'get-votes';
   public votes: { [key: string]: string } = {};
@@ -110,7 +111,9 @@ export class PublishResultComponent {
   }
 
   publish() {
-    this.platform.publishResults(this.voteMap).subscribe();
+    this.platform
+      .publishResults(this.voteMap)
+      .subscribe(res => this.published.emit(res.link));
   }
 
   private decryptVotesAdmin(): Promise<ArrayBuffer[]> {

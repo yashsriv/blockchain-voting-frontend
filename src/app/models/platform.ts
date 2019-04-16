@@ -5,7 +5,7 @@ export interface PlatformInfoResponse {
   candidates: string[];
   votingStarted: boolean;
   votingEnded: boolean;
-  resultsPublished: boolean;
+  resultsPublished: string;
 }
 
 export interface PlatformInfo {
@@ -15,5 +15,5 @@ export interface PlatformInfo {
   candidates: string[];
   votingStarted: boolean;
   votingEnded: boolean;
-  resultsPublished: boolean;
+  resultsPublished: string;
 }
