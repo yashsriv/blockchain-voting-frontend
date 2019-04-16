@@ -114,7 +114,7 @@ export class PublishResultComponent {
   }
 
   private decryptVotesAdmin(): Promise<ArrayBuffer[]> {
-    const decrypted = Object.keys(this.votes).map(vote => {
+    const decrypted = Object.keys(this.votes).map(async vote => {
       const ctStr = atob(vote);
       const ctArray = [];
       for (let i = 0, length = ctStr.length; i < length; i++) {
@@ -122,13 +122,14 @@ export class PublishResultComponent {
         ctArray.push(code);
       }
       const ctBuffer = new Uint8Array(ctArray).buffer;
-      return crypto.subtle.decrypt(
+      const decrypted = await crypto.subtle.decrypt(
         {
           name: 'RSA-OAEP',
         },
         this.adminPrivKey,
         ctBuffer
       );
+      return decrypted.slice(12);
     });
     return Promise.all(decrypted);
   }
@@ -145,7 +146,7 @@ export class PublishResultComponent {
             ctBuffer
           )
           .then(val => {
-            const ctArray = Array.from(new Uint8Array(val));
+            const ctArray = Array.from(new Uint8Array(val.slice(24)));
             const ctStr = ctArray
               .map(byte => String.fromCharCode(byte))
               .join('');

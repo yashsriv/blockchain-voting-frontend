@@ -67,20 +67,31 @@ export class VotingComponent {
     const aKey = this.adminKey;
 
     const passphrase = phrase('-').toLowerCase();
+    const candidateNonce = Array.from(
+      crypto.getRandomValues(new Uint8Array(12))
+    )
+      .map(b => ('00' + b.toString(16)).slice(-2))
+      .join('');
 
     const cEncrypted = await crypto.subtle.encrypt(
       { name: 'RSA-OAEP' },
       cKey,
-      new TextEncoder().encode(passphrase)
+      new TextEncoder().encode(candidateNonce + passphrase)
     );
+    const adminNonce = crypto.getRandomValues(new Uint8Array(12));
+
+    const nonceAppended = new Uint8Array(
+      cEncrypted.byteLength + adminNonce.length
+    );
+    nonceAppended.set(adminNonce, 0);
+    nonceAppended.set(new Uint8Array(cEncrypted), adminNonce.length);
 
     const aEncrypted = await crypto.subtle.encrypt(
       { name: 'RSA-OAEP' },
       aKey,
-      cEncrypted
+      nonceAppended.buffer
     );
 
-    console.log(passphrase);
     const ctArray = Array.from(new Uint8Array(aEncrypted)); // ciphertext as byte array
     const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join(''); // ciphertext as string
     const ctBase64 = btoa(ctStr); // encode ciphertext as base64
